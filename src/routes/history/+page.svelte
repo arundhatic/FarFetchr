@@ -1,0 +1,197 @@
+<script lang="ts">
+  import { onMount } from 'svelte';
+  import { goto } from '$app/navigation';
+  type Query = {
+    source: string;
+    destination: string;
+    unit: string;
+    result: { miles?: number; kilometers?: number };
+    timestamp: string;
+  };
+  let history: Query[] = [];
+
+  onMount(() => {
+    try {
+      history = JSON.parse(localStorage.getItem('distance_history') || '[]');
+    } catch {
+      history = [];
+    }
+  });
+
+  function backToCalculator() {
+    goto('/');
+  }
+</script>
+
+<div class="container-history">
+  <!-- Top Bar -->
+  <div class="history-top-bar">
+    <div class="history-title-group">
+      <h1>Distance Calculator</h1>
+      <p>Prototype web application for calculating the distance between addresses.</p>
+    </div>
+    <button class="back-btn" on:click={backToCalculator} aria-label="Back to Calculator">
+      <span class="back-icon">&#8592;</span> Back to Calculator
+    </button>
+  </div>
+
+  <div class="history-box">
+    <div class="history-header">
+      <div class="history-header-title">Historical Queries</div>
+      <div class="history-header-desc">History of the user's queries.</div>
+    </div>
+    <div class="history-table-wrap">
+      <table class="history-table">
+        <thead>
+          <tr>
+            <th>Source Address</th>
+            <th>Destination Address</th>
+            <th>Distance in Miles</th>
+            <th>Distance in Kilometers</th>
+          </tr>
+        </thead>
+        <tbody>
+          {#if history.length === 0}
+            <tr><td colspan="4" style="text-align:center; color:#888;">No historical queries found.</td></tr>
+          {:else}
+            {#each history as q}
+              <tr>
+                <td>{q.source}</td>
+                <td>{q.destination}</td>
+                <td>{q.result.miles !== undefined ? q.result.miles.toFixed(2) + ' mi' : '-'}</td>
+                <td>{q.result.kilometers !== undefined ? q.result.kilometers.toFixed(2) + ' km' : '-'}</td>
+              </tr>
+            {/each}
+          {/if}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<style>
+  .container-history {
+    padding: 1rem 2rem 2rem 2rem;
+    max-width: 1312px;
+    width: 100%;
+    min-height: 800px;
+    margin: 0 auto;
+    background: #f8f8f6;
+    border-radius: 8px;
+    box-sizing: border-box;
+  }
+  @media (max-width: 900px) {
+    .container-history {
+      padding: 0.5rem 0.5rem 1.5rem 0.5rem;
+      min-height: 600px;
+    }
+    .history-top-bar, .history-title-group {
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      gap: 1rem !important;
+    }
+    .history-box {
+      padding: 1.2rem 0.5rem 1.5rem 0.5rem;
+    }
+    .history-table th, .history-table td {
+      font-size: 0.95rem;
+      padding: 0.5rem 0.4rem;
+    }
+  }
+  @media (max-width: 600px) {
+    .container-history {
+      padding: 0.2rem 0.1rem 1rem 0.1rem;
+      min-height: 400px;
+    }
+    .history-top-bar, .history-title-group {
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      gap: 0.5rem !important;
+    }
+    .history-box {
+      padding: 0.7rem 0.1rem 1rem 0.1rem;
+    }
+    .history-table th, .history-table td {
+      font-size: 0.9rem;
+      padding: 0.3rem 0.2rem;
+    }
+  }
+  .history-top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+  .history-title-group h1 {
+    font-size: 2rem;
+    font-weight: 500;
+    margin-bottom: 0;
+  }
+  .history-title-group p {
+    margin: 0.25rem 0 0 0;
+    color: #555;
+  }
+  .back-btn {
+    background: #313030;
+    color: #fff;
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    margin-left: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-weight: 500;
+  }
+  .back-icon {
+    font-size: 1.1rem;
+    margin-right: 0.3rem;
+    display: inline-block;
+    transform: translateY(-1px);
+  }
+  .history-box {
+    background: #fff;
+    border-radius: 8px;
+    padding: 1.5rem 1.5rem 2rem 1.5rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+  }
+  .history-header-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.1rem;
+  }
+  .history-header-desc {
+    color: #888;
+    font-size: 0.98rem;
+    margin-bottom: 1.2rem;
+  }
+  .history-table-wrap {
+    overflow-x: auto;
+  }
+  .history-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+  }
+  .history-table th {
+    background: #ededed;
+    color: #313030;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0.7rem 0.8rem;
+    text-align: left;
+    border-bottom: 2px solid #e0e0e0;
+  }
+  .history-table td {
+    font-size: 1rem;
+    color: #313030;
+    padding: 0.7rem 0.8rem;
+    border-bottom: 1px solid #f0f0f0;
+    background: #fafaf8;
+  }
+  .history-table tr:last-child td {
+    border-bottom: none;
+  }
+</style> 
