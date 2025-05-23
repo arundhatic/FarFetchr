@@ -12,6 +12,10 @@
   let history: Query[] = [];
   let loading = true;
   let error = '';
+  let page = 1;
+  const pageSize = 10;
+  let pageCount = 0;
+  let paginated: Query[] = [];
 
   onMount(async () => {
     loading = true;
@@ -25,6 +29,8 @@
         result: { miles: q.miles, kilometers: q.kilometers },
         timestamp: q.timestamp
       }));
+      pageCount = Math.ceil(history.length / pageSize);
+      paginated = history.slice((page - 1) * pageSize, page * pageSize);
     } catch (e: any) {
       error = e.message || 'Failed to load history';
     } finally {
@@ -68,7 +74,7 @@
           {#if history.length === 0}
             <tr><td colspan="4" style="text-align:center; color:#888;">No historical queries found.</td></tr>
           {:else}
-            {#each history as q}
+            {#each paginated as q}
               <tr>
                 <td>{q.source}</td>
                 <td>{q.destination}</td>
@@ -79,6 +85,11 @@
           {/if}
         </tbody>
       </table>
+    </div>
+    <div class="pagination" style="margin-top: 1rem; display: flex; align-items: center; gap: 1rem;">
+      <button on:click={() => page = Math.max(1, page - 1)} disabled={page === 1}>Previous</button>
+      <span>Page {page} of {pageCount}</span>
+      <button on:click={() => page = Math.min(pageCount, page + 1)} disabled={page === pageCount}>Next</button>
     </div>
   </div>
 </div>
@@ -207,5 +218,21 @@
   }
   .history-table tr:last-child td {
     border-bottom: none;
+  }
+  .pagination button {
+    background: #313030;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 0.4rem 1.1rem;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    opacity: 1;
+    transition: opacity 0.2s;
+  }
+  .pagination button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 </style> 
