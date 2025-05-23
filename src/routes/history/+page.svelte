@@ -75,6 +75,9 @@
 
   $: pageCount = Math.ceil(filtered.length / pageSize);
   $: paginated = filtered.slice((page - 1) * pageSize, page * pageSize);
+
+  // Add a white calculator SVG icon for the back button
+  const calculatorIcon = `<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='none' viewBox='0 0 24 24'><rect width='18' height='18' x='3' y='3' fill='none' stroke='#313030' stroke-width='2' rx='2'/><rect width='12' height='3' x='6' y='6' fill='#313030'/><rect width='2' height='2' x='7' y='10' fill='#313030'/><rect width='2' height='2' x='11' y='10' fill='#313030'/><rect width='2' height='2' x='15' y='10' fill='#313030'/><rect width='2' height='2' x='7' y='14' fill='#313030'/><rect width='2' height='2' x='11' y='14' fill='#313030'/><rect width='2' height='2' x='15' y='14' fill='#313030'/></svg>`;
 </script>
 
 <div class="container-history">
@@ -84,8 +87,14 @@
       <h1>Distance Calculator</h1>
       <p>Prototype web application for calculating the distance between addresses.</p>
     </div>
-    <button class="back-btn" on:click={backToCalculator} aria-label="Back to Calculator">
-      <span class="back-icon">&#8592;</span> Back to Calculator
+    <button
+      class="back-btn"
+      on:click={backToCalculator}
+      aria-label="Back to Calculator"
+      style="display: flex; align-items: center; gap: 0.7rem; background: #ededed; color: #313030; min-width: 220px; height: 48px; padding: 0.6rem 1.2rem; border: 2px solid #313030; border-radius: 0; font-size: 0.95rem; font-weight: 400; margin: 0; box-shadow: none; justify-content: center;"
+    >
+      Back to Calculator
+      <span>{@html calculatorIcon}</span>
     </button>
   </div>
 
@@ -115,7 +124,7 @@
           <span style="margin:0 0.3rem;">-</span>
           <input type="number" min="0" placeholder="Max" bind:value={maxDistance} style="width:70px; padding:0.5rem; border:1px solid #ccc; border-radius:4px; font-size:1rem;" aria-label="Max distance" />
         </div>
-        <button type="button" on:click={clearFilters} style="margin-left:1rem; padding:0.6rem 1.2rem; font-size:1rem; background:#ededed; color:#313030; border:1px solid #ccc; border-radius:4px; cursor:pointer;">Clear Filters</button>
+        <button type="button" on:click={clearFilters} style="margin-left:1rem; padding:0.6rem 1.2rem; font-size:1rem; background:#ededed; color:#313030; border:1px solid #ccc; border-radius:0; cursor:pointer;">Clear Filters</button>
       </div>
     </div>
     <div class="history-table-wrap">
@@ -219,7 +228,7 @@
     color: #fff;
     padding: 0.6rem 1.2rem;
     border: none;
-    border-radius: 4px;
+    border-radius: 0;
     font-size: 0.95rem;
     margin-left: 2rem;
     display: flex;
@@ -281,7 +290,7 @@
     background: #313030;
     color: #fff;
     border: none;
-    border-radius: 4px;
+    border-radius: 0;
     padding: 0.4rem 1.1rem;
     font-size: 1rem;
     font-weight: 500;
@@ -292,5 +301,8 @@
   .pagination button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+  }
+  button[type="button"] {
+    border-radius: 0 !important;
   }
 </style> 

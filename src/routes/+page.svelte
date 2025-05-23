@@ -272,12 +272,12 @@
 </style>
 
 <div class="container">
-  <div class="top-bar">
-    <div style="display: flex; flex-direction: column;">
+  <div class="top-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+    <div style="display: flex; flex-direction: row; align-items: center; gap: 1.5rem;">
       <h1 style="font-size: 2rem; font-weight: 500; margin-bottom: 0;">Distance Calculator</h1>
       <p style="margin: 0.25rem 0 0 0; color: #555;">Prototype web application for calculating the distance between addresses.</p>
     </div>
-    <button class="view-history-btn" on:click={viewHistory} style="background: #313030; color: #fff; padding: 0.6rem 1.2rem; border: none; border-radius: 4px; font-size: 0.95rem; margin-left: 2rem; display: flex; align-items: center; gap: 0.7rem;">
+    <button class="view-history-btn" on:click={viewHistory} style="background: #313030; color: #fff; padding: 0.6rem 1.2rem; border: none; border-radius: 0; font-size: 0.95rem; display: flex; align-items: center; gap: 0.7rem;">
       View Historical Queries
       <span>{@html historyIcon}</span>
     </button>
