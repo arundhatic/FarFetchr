@@ -112,9 +112,10 @@ FarFetchr is a responsive SvelteKit web application that allows users to calcula
   - Mobile viewport/responsive layout
 
 ## Notes
-- All data is stored locally in the browser; no backend is required.
-- The app is for demonstration and prototyping purposes.
-- For production use, consider adding rate limiting, API keys, and backend support.
+
+* Data is now stored and retrieved via a FastAPI + PostgreSQL backend.
+* The app is for demonstration and prototyping purposes.
+* For production use, consider adding authentication, rate limiting, and API keys.
 
 ---
 
