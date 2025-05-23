@@ -16,6 +16,10 @@
   const pageSize = 10;
   let pageCount = 0;
   let paginated: Query[] = [];
+  let addressFilter = '';
+  let filterType: 'both' | 'source' | 'destination' = 'both';
+  let minDistance: number | '' = '';
+  let maxDistance: number | '' = '';
 
   onMount(async () => {
     loading = true;
@@ -41,6 +45,36 @@
   function backToCalculator() {
     goto('/');
   }
+
+  function clearFilters() {
+    addressFilter = '';
+    filterType = 'both';
+    minDistance = '';
+    maxDistance = '';
+  }
+
+  $: filtered = history.filter(q => {
+    // Address filter
+    const addressMatch =
+      !addressFilter ||
+      (filterType === 'source'
+        ? q.source.toLowerCase().includes(addressFilter.toLowerCase())
+        : filterType === 'destination'
+        ? q.destination.toLowerCase().includes(addressFilter.toLowerCase())
+        : q.source.toLowerCase().includes(addressFilter.toLowerCase()) ||
+          q.destination.toLowerCase().includes(addressFilter.toLowerCase()));
+
+    // Distance filter (miles)
+    const miles = q.result.miles ?? 0;
+    const distanceMatch =
+      (!minDistance || miles >= Number(minDistance)) &&
+      (!maxDistance || miles <= Number(maxDistance));
+
+    return addressMatch && distanceMatch;
+  });
+
+  $: pageCount = Math.ceil(filtered.length / pageSize);
+  $: paginated = filtered.slice((page - 1) * pageSize, page * pageSize);
 </script>
 
 <div class="container-history">
@@ -59,6 +93,30 @@
     <div class="history-header">
       <div class="history-header-title">Historical Queries</div>
       <div class="history-header-desc">History of the user's queries.</div>
+      <div style="display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 0.5rem; align-items: flex-end; margin-bottom: 1.2rem;">
+        <div>
+          <label style="font-size:0.95rem; color:#888;">Address</label><br />
+          <input
+            type="text"
+            placeholder="Filter by address..."
+            bind:value={addressFilter}
+            style="padding: 0.5rem 1rem; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; width: 180px;"
+            aria-label="Filter address"
+          />
+          <select bind:value={filterType} style="margin-left:0.5rem; padding:0.5rem; font-size:1rem;">
+            <option value="both">Source or Destination</option>
+            <option value="source">Source Only</option>
+            <option value="destination">Destination Only</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size:0.95rem; color:#888;">Distance (mi)</label><br />
+          <input type="number" min="0" placeholder="Min" bind:value={minDistance} style="width:70px; padding:0.5rem; border:1px solid #ccc; border-radius:4px; font-size:1rem;" aria-label="Min distance" />
+          <span style="margin:0 0.3rem;">-</span>
+          <input type="number" min="0" placeholder="Max" bind:value={maxDistance} style="width:70px; padding:0.5rem; border:1px solid #ccc; border-radius:4px; font-size:1rem;" aria-label="Max distance" />
+        </div>
+        <button type="button" on:click={clearFilters} style="margin-left:1rem; padding:0.6rem 1.2rem; font-size:1rem; background:#ededed; color:#313030; border:1px solid #ccc; border-radius:4px; cursor:pointer;">Clear Filters</button>
+      </div>
     </div>
     <div class="history-table-wrap">
       <table class="history-table">

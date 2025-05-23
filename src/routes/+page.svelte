@@ -16,6 +16,9 @@
 
   const spinnerIcon = `<svg class='spinner' width='20' height='20' viewBox='0 0 50 50'><circle class='path' cx='25' cy='25' r='20' fill='none' stroke='#fff' stroke-width='5'></circle></svg>`;
 
+  // Replace the historyIcon SVG with a simple clock (full circle, two hands, no arrow)
+  const historyIcon = `<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='none' viewBox='0 0 24 24'><circle cx='12' cy='12' r='9' stroke='#fff' stroke-width='2' fill='none'/><line x1='12' y1='12' x2='12' y2='8' stroke='#fff' stroke-width='2' stroke-linecap='round'/><line x1='12' y1='12' x2='16' y2='12' stroke='#fff' stroke-width='2' stroke-linecap='round'/></svg>`;
+
   function viewHistory() {
     goto('/history');
   }
@@ -264,11 +267,14 @@
       <h1 style="font-size: 2rem; font-weight: 500; margin-bottom: 0;">Distance Calculator</h1>
       <p style="margin: 0.25rem 0 0 0; color: #555;">Prototype web application for calculating the distance between addresses.</p>
     </div>
-    <button class="view-history-btn" on:click={viewHistory} style="background: #313030; color: #fff; padding: 0.6rem 1.2rem; border: none; border-radius: 4px; font-size: 0.95rem; margin-left: 2rem;">View Historical Queries</button>
+    <button class="view-history-btn" on:click={viewHistory} style="background: #313030; color: #fff; padding: 0.6rem 1.2rem; border: none; border-radius: 4px; font-size: 0.95rem; margin-left: 2rem; display: flex; align-items: center; gap: 0.7rem;">
+      View Historical Queries
+      <span>{@html historyIcon}</span>
+    </button>
   </div>
 
   <!-- Form Row -->
-  <form on:submit|preventDefault={calculate} style="background: #fff; border-radius: 6px; padding: 2rem 1.5rem; display: flex; gap: 1.5rem; align-items: flex-start; flex-wrap: wrap; box-shadow: 0 1px 4px rgba(0,0,0,0.03);">
+  <form on:submit|preventDefault={calculate} style="background: #fff; border-radius: 6px; padding: 2rem 1.5rem; display: flex; gap: 3rem; align-items: flex-start; flex-wrap: wrap; box-shadow: 0 1px 4px rgba(0,0,0,0.03);">
     <!-- Source Address and Button Column -->
     <div style="display: flex; flex-direction: column; gap: 0.5rem; min-width: 240px; flex: 1;">
       <label for="source-address" style="font-size: 0.95rem; color: #888; font-weight: 500;">Source Address</label>
@@ -302,7 +308,7 @@
       </fieldset>
       <!-- Distance Result -->
       <div style="min-width: 140px; font-size: 1.15rem; font-weight: 600; color: #222;">
-        <label for="distance-value" style="font-size: 0.95rem; color: #888; font-weight: 500;">Distance</label><br>
+        <label for="distance-value" style="font-size: 0.95rem; color: #888; font-weight: 500; display: block; margin-bottom: 0.3rem;">Distance</label><br>
         {#if result}
           <span id="distance-value">
             {#if result.miles !== undefined && result.kilometers !== undefined}
