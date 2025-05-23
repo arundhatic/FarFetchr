@@ -238,6 +238,19 @@
       padding: 0.9rem 0;
     }
   }
+
+  /* Custom radio button styles for Unit selection */
+  fieldset input[type="radio"] {
+    accent-color: #bf281c;
+  }
+
+  /* For browsers that do not support accent-color, add fallback */
+  fieldset input[type="radio"]:checked {
+    /* Hide default */
+    /* appearance: none; */
+    /* outline: 2px solid #bf281c; */
+    /* box-shadow: 0 0 0 2px #fff, 0 0 0 4px #bf281c; */
+  }
 </style>
 
 <div class="container">
