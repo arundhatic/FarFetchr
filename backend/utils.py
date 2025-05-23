@@ -20,6 +20,10 @@ def clean_address(address: str) -> str:
     cleaned = re.sub(r',+\s*$', '', cleaned)
     return cleaned.strip()
 
+ACCEPTED_TYPES = {
+    "house", "building", "road", "residential", "street", "tertiary", "secondary", "primary"
+}
+
 async def geocode_address(address: str) -> tuple[float, float]:
     params = {
         "q": address,
@@ -36,9 +40,20 @@ async def geocode_address(address: str) -> tuple[float, float]:
                 response = await client.get(NOMINATIM_URL, params=params, headers=headers, timeout=10)
                 response.raise_for_status()
                 data = response.json()
+                logger.info(f"Nominatim response for address '{address}': {data}")
                 if data:
-                    lat = float(data[0]["lat"])
-                    lon = float(data[0]["lon"])
+                    result = data[0]
+                    importance = float(result.get("importance", 0))
+                    result_type = result.get("type", "")
+                    display_name = result.get("display_name", "").lower()
+                    address_parts = [part.lower() for part in address.split() if part]
+                    if sum(part in display_name for part in address_parts) < 1:
+                        logger.warning(f"Geocoding result not matched: {address} -> {display_name}")
+                        raise ValueError(f"Address not matched: {address}")
+                    if importance < 0.1 or result_type not in {"building", "house", "residential"}:
+                        logger.warning(f"Geocoding result for '{address}' is low importance ({importance}) or not a building/house/residential (type={result_type}): {display_name}")
+                    lat = float(result["lat"])
+                    lon = float(result["lon"])
                     logger.info(f"Geocoding success for address: {address} -> ({lat}, {lon})")
                     return lat, lon
                 # Try again with cleaned address
@@ -49,13 +64,24 @@ async def geocode_address(address: str) -> tuple[float, float]:
                     response = await client.get(NOMINATIM_URL, params=params, headers=headers, timeout=10)
                     response.raise_for_status()
                     data = response.json()
+                    logger.info(f"Nominatim response for cleaned address '{cleaned}': {data}")
                     if data:
-                        lat = float(data[0]["lat"])
-                        lon = float(data[0]["lon"])
+                        result = data[0]
+                        importance = float(result.get("importance", 0))
+                        result_type = result.get("type", "")
+                        display_name = result.get("display_name", "").lower()
+                        address_parts = [part.lower() for part in cleaned.split() if part]
+                        if sum(part in display_name for part in address_parts) < 1:
+                            logger.warning(f"Geocoding result not matched: {cleaned} -> {display_name}")
+                            raise ValueError(f"Address not matched: {cleaned}")
+                        if importance < 0.1 or result_type not in {"building", "house", "residential"}:
+                            logger.warning(f"Geocoding result for cleaned '{cleaned}' is low importance ({importance}) or not a building/house/residential (type={result_type}): {display_name}")
+                        lat = float(result["lat"])
+                        lon = float(result["lon"])
                         logger.info(f"Geocoding success for cleaned address: {cleaned} -> ({lat}, {lon})")
                         return lat, lon
             logger.warning(f"No geocoding result for address: {address} (attempt {attempt+1})")
-        except (httpx.RequestError, httpx.HTTPStatusError) as e:
+        except (httpx.RequestError, httpx.HTTPStatusError, ValueError) as e:
             logger.error(f"Geocoding API error on attempt {attempt+1} for address '{address}': {e}")
             last_exception = e
         attempt += 1

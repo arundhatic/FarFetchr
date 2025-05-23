@@ -57,6 +57,7 @@ FarFetchr is a responsive SvelteKit web application that allows users to calcula
 - **Geocoding Failure:** Informs user if the address cannot be found.
 - **Network/API Errors:** Notifies user of connectivity issues.
 - **All errors are shown in a styled toast notification at the bottom right.**
+- **For a full list of error conditions and validation logic, see [`tests/README.md`](tests/README.md).**
 
 ## How It Works
 - **Main Page:**
