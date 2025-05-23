@@ -10,6 +10,8 @@
   let showErrorToast = false;
   let errorToastTitle = 'Calculation failed';
   let errorToastMessage = 'Something went wrong and the calculation failed.';
+  let lastSource = '';
+  let lastDestination = '';
 
   // Calculator SVG Icon as a string
   const calculatorIcon = `<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='none' viewBox='0 0 24 24'><rect width='18' height='18' x='3' y='3' fill='#fff' stroke='#fff' stroke-width='2' rx='2'/><rect width='18' height='18' x='3' y='3' stroke='#B32D0F' stroke-width='2' rx='2'/><rect width='12' height='3' x='6' y='6' fill='#B32D0F'/><rect width='2' height='2' x='7' y='10' fill='#B32D0F'/><rect width='2' height='2' x='11' y='10' fill='#B32D0F'/><rect width='2' height='2' x='15' y='10' fill='#B32D0F'/><rect width='2' height='2' x='7' y='14' fill='#B32D0F'/><rect width='2' height='2' x='11' y='14' fill='#B32D0F'/><rect width='2' height='2' x='15' y='14' fill='#B32D0F'/></svg>`;
@@ -47,10 +49,16 @@
     return true;
   }
 
-  async function calculate() {
+  $: if (
+    result &&
+    (source !== lastSource || destination !== lastDestination)
+  ) {
+    result = null;
+  }
+
+  function calculate() {
     loading = true;
     error = '';
-    result = null;
     showErrorToast = false;
     errorToastTitle = 'Calculation failed';
     errorToastMessage = 'Something went wrong and the calculation failed.';
@@ -83,18 +91,20 @@
       loading = false;
       return;
     }
-    try {
-      const apiResult = await calculateDistance(source, destination);
-      if (unit === 'miles') result = { miles: apiResult.miles };
-      else if (unit === 'kilometers') result = { kilometers: apiResult.kilometers };
-      else result = { miles: apiResult.miles, kilometers: apiResult.kilometers };
-    } catch (e: any) {
-      errorToastTitle = 'Calculation failed';
-      errorToastMessage = e.message || 'Something went wrong and the calculation failed.';
-      showErrorToast = true;
-    } finally {
-      loading = false;
-    }
+    calculateDistance(source, destination)
+      .then(apiResult => {
+        result = { miles: apiResult.miles, kilometers: apiResult.kilometers };
+        lastSource = source;
+        lastDestination = destination;
+      })
+      .catch(e => {
+        errorToastTitle = 'Calculation failed';
+        errorToastMessage = e.message || 'Something went wrong and the calculation failed.';
+        showErrorToast = true;
+      })
+      .finally(() => {
+        loading = false;
+      });
   }
 
   function closeToast() {
@@ -311,12 +321,18 @@
         <label for="distance-value" style="font-size: 0.95rem; color: #888; font-weight: 500; display: block; margin-bottom: 0.3rem;">Distance</label><br>
         {#if result}
           <span id="distance-value">
-            {#if result.miles !== undefined && result.kilometers !== undefined}
-              {result.miles.toFixed(2)} mi / {result.kilometers.toFixed(2)} km
-            {:else if result.miles !== undefined}
-              {result.miles.toFixed(2)} mi
-            {:else if result.kilometers !== undefined}
-              {result.kilometers.toFixed(2)} km
+            {#if unit === 'both'}
+              {result.miles !== undefined && result.kilometers !== undefined
+                ? `${result.miles.toFixed(2)} mi / ${result.kilometers.toFixed(2)} km`
+                : result.miles !== undefined
+                ? `${result.miles.toFixed(2)} mi`
+                : result.kilometers !== undefined
+                ? `${result.kilometers.toFixed(2)} km`
+                : ''}
+            {:else if unit === 'miles'}
+              {result.miles !== undefined ? `${result.miles.toFixed(2)} mi` : ''}
+            {:else if unit === 'kilometers'}
+              {result.kilometers !== undefined ? `${result.kilometers.toFixed(2)} km` : ''}
             {/if}
           </span>
         {/if}
