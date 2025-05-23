@@ -3,8 +3,17 @@
 
 import httpx
 import math
+import re
 
 NOMINATIM_URL = "https://nominatim.openstreetmap.org/search"
+
+def clean_address(address: str) -> str:
+    # Remove 'Suite' and anything after, extra commas, and trim whitespace
+    cleaned = re.sub(r'suite.*$', '', address, flags=re.IGNORECASE)
+    cleaned = re.sub(r',+', ',', cleaned)
+    cleaned = re.sub(r'\s+,', ',', cleaned)
+    cleaned = re.sub(r',+\s*$', '', cleaned)
+    return cleaned.strip()
 
 async def geocode_address(address: str) -> tuple[float, float]:
     params = {
@@ -17,11 +26,22 @@ async def geocode_address(address: str) -> tuple[float, float]:
         response = await client.get(NOMINATIM_URL, params=params, headers=headers, timeout=10)
         response.raise_for_status()
         data = response.json()
-        if not data:
-            raise ValueError(f"Address not found: {address}")
-        lat = float(data[0]["lat"])
-        lon = float(data[0]["lon"])
-        return lat, lon
+        if data:
+            lat = float(data[0]["lat"])
+            lon = float(data[0]["lon"])
+            return lat, lon
+        # Try again with cleaned address
+        cleaned = clean_address(address)
+        if cleaned != address:
+            params["q"] = cleaned
+            response = await client.get(NOMINATIM_URL, params=params, headers=headers, timeout=10)
+            response.raise_for_status()
+            data = response.json()
+            if data:
+                lat = float(data[0]["lat"])
+                lon = float(data[0]["lon"])
+                return lat, lon
+        raise ValueError(f"Address not found: {address}")
 
 def haversine(lat1: float, lon1: float, lat2: float, lon2: float) -> tuple[float, float]:
     R = 6371  # Earth radius in kilometers

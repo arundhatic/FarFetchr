@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
+  import { getHistory } from '../../lib/api';
   type Query = {
     source: string;
     destination: string;
@@ -9,12 +10,25 @@
     timestamp: string;
   };
   let history: Query[] = [];
+  let loading = true;
+  let error = '';
 
-  onMount(() => {
+  onMount(async () => {
+    loading = true;
+    error = '';
     try {
-      history = JSON.parse(localStorage.getItem('distance_history') || '[]');
-    } catch {
-      history = [];
+      const data = await getHistory();
+      // The backend returns { history: [ ... ] }
+      history = data.history.map(q => ({
+        source: q.source,
+        destination: q.destination,
+        result: { miles: q.miles, kilometers: q.kilometers },
+        timestamp: q.timestamp
+      }));
+    } catch (e: any) {
+      error = e.message || 'Failed to load history';
+    } finally {
+      loading = false;
     }
   });
 

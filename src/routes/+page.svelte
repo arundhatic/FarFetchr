@@ -1,5 +1,6 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
+  import { calculateDistance } from '../lib/api';
   let source = '';
   let destination = '';
   let unit: 'miles' | 'kilometers' | 'both' = 'miles';
@@ -36,65 +37,6 @@
     // Only special characters
     if (/^[^a-zA-Z0-9]+$/.test(address.trim())) return false;
     return true;
-  }
-
-  async function geocode(address: string) {
-    let url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`;
-    let res: Response;
-    let data: any;
-    try {
-      res = await fetch(url);
-      data = await res.json();
-    } catch (e) {
-      throw new Error('Network error. Please try again later.');
-    }
-    if (data && data.length > 0) {
-      return {
-        lat: parseFloat(data[0].lat),
-        lon: parseFloat(data[0].lon)
-      };
-    }
-    const cleaned = cleanAddress(address);
-    if (cleaned !== address) {
-      try {
-        url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(cleaned)}`;
-        res = await fetch(url);
-        data = await res.json();
-      } catch (e) {
-        throw new Error('Network error. Please try again later.');
-      }
-      if (data && data.length > 0) {
-        return {
-          lat: parseFloat(data[0].lat),
-          lon: parseFloat(data[0].lon)
-        };
-      }
-    }
-    throw new Error('Address not found. Please check the address and try again.');
-  }
-
-  function haversine(lat1: number, lon1: number, lat2: number, lon2: number) {
-    const toRad = (x: number) => (x * Math.PI) / 180;
-    const R = 6371; // km
-    const dLat = toRad(lat2 - lat1);
-    const dLon = toRad(lon2 - lon1);
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
-      Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const km = R * c;
-    const miles = km * 0.621371;
-    return { kilometers: km, miles };
-  }
-
-  function saveQueryToHistory(query: any) {
-    let history = [];
-    try {
-      history = JSON.parse(localStorage.getItem('distance_history') || '[]');
-    } catch {}
-    history.unshift(query);
-    localStorage.setItem('distance_history', JSON.stringify(history.slice(0, 20)));
   }
 
   async function calculate() {
@@ -134,19 +76,10 @@
       return;
     }
     try {
-      const src = await geocode(source);
-      const dest = await geocode(destination);
-      const dist = haversine(src.lat, src.lon, dest.lat, dest.lon);
-      if (unit === 'miles') result = { miles: dist.miles };
-      else if (unit === 'kilometers') result = { kilometers: dist.kilometers };
-      else result = dist;
-      saveQueryToHistory({
-        source,
-        destination,
-        unit,
-        result,
-        timestamp: new Date().toISOString()
-      });
+      const apiResult = await calculateDistance(source, destination);
+      if (unit === 'miles') result = { miles: apiResult.miles };
+      else if (unit === 'kilometers') result = { kilometers: apiResult.kilometers };
+      else result = { miles: apiResult.miles, kilometers: apiResult.kilometers };
     } catch (e: any) {
       errorToastTitle = 'Calculation failed';
       errorToastMessage = e.message || 'Something went wrong and the calculation failed.';
