@@ -91,7 +91,7 @@
       class="back-btn"
       on:click={backToCalculator}
       aria-label="Back to Calculator"
-      style="display: flex; align-items: center; gap: 0.7rem; background: #ededed; color: #313030; min-width: 220px; height: 48px; padding: 0.6rem 1.2rem; border: 2px solid #313030; border-radius: 0; font-size: 0.95rem; font-weight: 400; margin: 0; box-shadow: none; justify-content: center;"
+      style="display: flex; align-items: center; gap: 0.7rem; background: #ededed; color: #313030; min-width: 220px; height: 48px; padding: 0.6rem 1.2rem; border: 1.2px solid #313030; border-radius: 0; font-size: 0.95rem; font-weight: 400; margin: 0; box-shadow: none; justify-content: center;"
     >
       Back to Calculator
       <span>{@html calculatorIcon}</span>
