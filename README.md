@@ -3,6 +3,39 @@
 ## Overview
 FarFetchr is a responsive SvelteKit web application that allows users to calculate the distance between two addresses and view their past queries. The app is designed for ease of use, accessibility, and a seamless experience across desktop, tablet, and mobile devices.
 
+## Quick Start: Run the Full App Locally
+
+1. **Clone the repository:**
+   ```bash
+   git clone <your-repo-url>
+   cd FarFetchr
+   ```
+
+2. **Start the backend:**
+   ```bash
+   cd backend
+   python3 -m venv venv
+   source venv/bin/activate
+   pip install -r requirements.txt
+   # Set up your .env file as described below
+   ./setup.sh
+   uvicorn main:app --reload
+   ```
+   The backend will be running at [http://localhost:8000](http://localhost:8000).
+
+3. **Start the frontend:**
+   - Open a new terminal window/tab.
+   - From the project root:
+     ```bash
+     npm install
+     npm run dev -- --open
+     ```
+   The frontend will open at [http://localhost:5173](http://localhost:5173).
+
+4. **Test the app:**
+   - Visit the frontend URL in your browser.
+   - Try calculating distances and viewing history.
+
 ## Features
 - **Distance Calculation:** Enter a source and destination address to calculate the distance in miles, kilometers, or both.
 - **Geocoding:** Uses OpenStreetMap Nominatim to convert addresses to coordinates.
@@ -24,22 +57,6 @@ FarFetchr is a responsive SvelteKit web application that allows users to calcula
 - **Geocoding Failure:** Informs user if the address cannot be found.
 - **Network/API Errors:** Notifies user of connectivity issues.
 - **All errors are shown in a styled toast notification at the bottom right.**
-
-## Setup & Running Locally
-1. **Clone the repository:**
-   ```bash
-   git clone <your-repo-url>
-   cd FarFetchr
-   ```
-2. **Install dependencies:**
-   ```bash
-   npm install
-   ```
-3. **Run the development server:**
-   ```bash
-   npm run dev -- --open
-   ```
-   The app will open at [http://localhost:5173](http://localhost:5173) by default.
 
 ## How It Works
 - **Main Page:**
@@ -116,6 +133,44 @@ FarFetchr is a responsive SvelteKit web application that allows users to calcula
 * Data is now stored and retrieved via a FastAPI + PostgreSQL backend.
 * The app is for demonstration and prototyping purposes.
 * For production use, consider adding authentication, rate limiting, and API keys.
+
+## Backend Setup
+
+To set up and run the FastAPI backend:
+
+1. **Navigate to the backend directory:**
+   ```bash
+   cd backend
+   ```
+2. **Create and activate a Python virtual environment:**
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate
+   ```
+3. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+4. **Set up your PostgreSQL database:**
+   - Make sure PostgreSQL is running.
+   - Create a database (e.g., `farfetchr`).
+   - Create a user/role with access to the database.
+5. **Configure environment variables:**
+   - Create a `.env` file in the `backend/` directory with:
+     ```
+     DATABASE_URL=postgresql+asyncpg://<username>:<password>@localhost:5432/farfetchr
+     ```
+     Replace `<username>` and `<password>` with your PostgreSQL credentials.
+6. **Initialize the database tables:**
+   ```bash
+   ./setup.sh
+   ```
+   (This will create tables and install dependencies if needed.)
+7. **Run the FastAPI server:**
+   ```bash
+   uvicorn main:app --reload
+   ```
+   The backend will be available at `http://localhost:8000`.
 
 ---
 
