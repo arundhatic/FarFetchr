@@ -8,8 +8,20 @@ from typing import List, Optional
 from datetime import datetime
 
 class DistanceRequest(BaseModel):
-    source: str = Field(..., example="415 Mission St, San Francisco, CA")
-    destination: str = Field(..., example="1600 Amphitheatre Parkway, Mountain View, CA")
+    source: str = Field(
+        ..., 
+        min_length=5, 
+        max_length=200, 
+        pattern=r"^[a-zA-Z0-9 ,.-]+$",
+        example="415 Mission St, San Francisco, CA"
+    )
+    destination: str = Field(
+        ..., 
+        min_length=5, 
+        max_length=200, 
+        pattern=r"^[a-zA-Z0-9 ,.-]+$",
+        example="1600 Amphitheatre Parkway, Mountain View, CA"
+    )
 
 class DistanceResponse(BaseModel):
     miles: float
