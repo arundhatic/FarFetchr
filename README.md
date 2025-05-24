@@ -181,6 +181,15 @@ You can use the following npm scripts for testing:
 - `npm run test:e2e` — Runs all Playwright E2E tests in `tests/e2e`
 - `npm test` — Runs both unit and E2E tests in sequence
 
+### Backend Test Script
+
+To run all backend tests from the backend folder, use:
+```bash
+cd backend
+./run_tests.sh
+```
+See backend/README.md for more details.
+
 ---
 
 Enjoy using FarFetchr!

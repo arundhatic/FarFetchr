@@ -72,4 +72,23 @@ All test dependencies are included in `requirements.txt`.
 **Troubleshooting:**
 - If you see import errors (e.g., `ModuleNotFoundError`), make sure you are running the tests from the `backend` directory and that your virtual environment is activated.
 
+### Running Backend Tests with a Script
+
+You can use the provided shell script to run all backend tests easily:
+
+1. Make sure you are in the backend directory:
+   ```bash
+   cd backend
+   ```
+2. Make the script executable (only needed once):
+   ```bash
+   chmod +x run_tests.sh
+   ```
+3. Run all backend tests:
+   ```bash
+   ./run_tests.sh
+   ```
+
+This will activate the virtual environment and run all backend tests with pytest.
+
 ---
