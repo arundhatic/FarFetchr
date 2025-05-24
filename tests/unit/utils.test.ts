@@ -27,6 +27,8 @@ describe('isValidAddress', () => {
   it('returns false for empty or too short', () => {
     expect(isValidAddress('')).toBe(false);
     expect(isValidAddress('123')).toBe(false);
+    expect(isValidAddress('Main St')).toBe(false);
+    expect(isValidAddress('123 Main')).toBe(false);
   });
   it('returns false for all numbers', () => {
     expect(isValidAddress('123456')).toBe(false);
@@ -37,18 +39,30 @@ describe('isValidAddress', () => {
   it('returns false for only special characters', () => {
     expect(isValidAddress('!!!@@@')).toBe(false);
   });
-  it('returns true for a valid address', () => {
-    expect(isValidAddress('415 Mission St, San Francisco, CA')).toBe(true);
+  it('returns false for missing comma', () => {
+    expect(isValidAddress('123 Main St San Francisco CA')).toBe(false);
   });
-  it('returns true for a valid address with numbers and letters', () => {
-    expect(isValidAddress('123 Main St')).toBe(true);
+  it('returns false for only one comma-separated part', () => {
+    expect(isValidAddress('123 Main St,')).toBe(false);
+  });
+  it('returns false for missing state code or zip', () => {
+    expect(isValidAddress('123 Main St, San Francisco')).toBe(false);
+    expect(isValidAddress('123 Main St, San Francisco, California')).toBe(false);
+  });
+  it('returns true for a valid address with state code', () => {
+    expect(isValidAddress('415 Mission St, San Francisco, CA')).toBe(true);
+    expect(isValidAddress('123 Main St, Springfield, IL')).toBe(true);
+  });
+  it('returns true for a valid address with state code and zip', () => {
+    expect(isValidAddress('415 Mission St, San Francisco, CA 94105')).toBe(true);
+    expect(isValidAddress('123 Main St, Springfield, IL 62704')).toBe(true);
   });
   it('trims whitespace and still validates', () => {
-    expect(isValidAddress('   123 Main St   ')).toBe(true);
+    expect(isValidAddress('   123 Main St, Springfield, IL   ')).toBe(true);
   });
   it('is case insensitive', () => {
-    expect(isValidAddress('main st')).toBe(true);
-    expect(isValidAddress('MAIN ST')).toBe(true);
+    expect(isValidAddress('123 main st, springfield, il')).toBe(true);
+    expect(isValidAddress('123 MAIN ST, SPRINGFIELD, IL')).toBe(true);
   });
 });
 

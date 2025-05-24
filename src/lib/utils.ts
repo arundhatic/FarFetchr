@@ -16,13 +16,22 @@ export function haversine(lat1: number, lon1: number, lat2: number, lon2: number
 }
 
 export function isValidAddress(address: string): boolean {
-  if (!address || address.trim().length < 5) return false;
-  // All numbers
-  if (/^\d+$/.test(address.trim())) return false;
-  // No letters
-  if (!/[a-zA-Z]/.test(address)) return false;
-  // Only special characters
-  if (/^[^a-zA-Z0-9]+$/.test(address.trim())) return false;
+  if (!address || address.trim().length < 8) return false;
+  // Require at least one number (street number)
+  if (!/\d+/.test(address)) return false;
+  // Require at least one word (street name)
+  if (!/[a-zA-Z]{2,}/.test(address)) return false;
+  // Require a comma (to separate street from city/state)
+  if (!address.includes(',')) return false;
+  // Require at least two comma-separated parts
+  const parts = address.split(',').map(p => p.trim()).filter(Boolean);
+  if (parts.length < 2) return false;
+  // Optionally: Require state code or zip in the last part
+  const lastPart = parts[parts.length - 1].trim();
+  if (
+    !/^[A-Za-z]{2}$/.test(lastPart) && // state code only
+    !/^[A-Za-z]{2}\s*\d{5}$/.test(lastPart) // state code + zip
+  ) return false;
   return true;
 }
 
