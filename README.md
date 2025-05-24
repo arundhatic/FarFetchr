@@ -173,6 +173,14 @@ To set up and run the FastAPI backend:
    ```
    The backend will be available at `http://localhost:8000`.
 
+### Test Scripts (from package.json)
+
+You can use the following npm scripts for testing:
+
+- `npm run test:unit` — Runs all unit tests in `tests/unit` using Vitest
+- `npm run test:e2e` — Runs all Playwright E2E tests in `tests/e2e`
+- `npm test` — Runs both unit and E2E tests in sequence
+
 ---
 
 Enjoy using FarFetchr!
