@@ -9,7 +9,7 @@ const DEST = '1600 Amphitheatre Parkway, Mountain View, CA';
 
 test.describe('Distance Calculator E2E', () => {
   test('calculates distance between two addresses', async ({ page }) => {
-    await page.goto('http://localhost:5173');
+    await page.goto('/');
 
     // Fill in source and destination
     await page.getByLabel('Source Address').fill(SOURCE);
@@ -28,13 +28,13 @@ test.describe('Distance Calculator E2E', () => {
   });
 
   test('shows error for empty fields', async ({ page }) => {
-    await page.goto('http://localhost:5173');
+    await page.goto('/');
     const button = await page.getByRole('button', { name: /calculate distance/i });
     await expect(button).toBeDisabled();
   });
 
   test('shows error for invalid source address', async ({ page }) => {
-    await page.goto('http://localhost:5173');
+    await page.goto('/');
     await page.getByLabel('Source Address').fill('123');
     await page.getByLabel('Destination Address').fill(DEST);
     const button = await page.getByRole('button', { name: /calculate distance/i });
@@ -43,7 +43,7 @@ test.describe('Distance Calculator E2E', () => {
   });
 
   test('shows error for identical addresses', async ({ page }) => {
-    await page.goto('http://localhost:5173');
+    await page.goto('/');
     await page.getByLabel('Source Address').fill(SOURCE);
     await page.getByLabel('Destination Address').fill(SOURCE);
     const button = await page.getByRole('button', { name: /calculate distance/i });
@@ -52,7 +52,7 @@ test.describe('Distance Calculator E2E', () => {
   });
 
   test('history page shows previous queries', async ({ page }) => {
-    await page.goto('http://localhost:5173');
+    await page.goto('/');
     // Add a query to history
     await page.getByLabel('Source Address').fill(SOURCE);
     await page.getByLabel('Destination Address').fill(DEST);
@@ -69,7 +69,7 @@ test.describe('Distance Calculator E2E', () => {
 
   test('shows error for unfindable address (geocoding failure)', async ({ page }) => {
     // NOTE: If this test fails, manually verify the error message in the UI and adjust the test or frontend as needed.
-    await page.goto('http://localhost:5173');
+    await page.goto('/');
     await page.getByLabel('Source Address').fill('ThisAddressDoesNotExist1234567890');
     await page.getByLabel('Destination Address').fill(DEST);
     await page.getByLabel('Both').check();
@@ -81,7 +81,7 @@ test.describe('Distance Calculator E2E', () => {
   test('shows error for network error during geocoding', async ({ page }) => {
     // NOTE: If this test fails, manually verify the error message in the UI and adjust the test or frontend as needed.
     await page.route('**/nominatim.openstreetmap.org/**', route => route.abort());
-    await page.goto('http://localhost:5173');
+    await page.goto('/');
     await page.getByLabel('Source Address').fill(SOURCE);
     await page.getByLabel('Destination Address').fill(DEST);
     await page.getByLabel('Both').check();
@@ -91,7 +91,7 @@ test.describe('Distance Calculator E2E', () => {
   });
 
   test('has accessible labels and roles', async ({ page }) => {
-    await page.goto('http://localhost:5173');
+    await page.goto('/');
     // Check for accessible labels
     await expect(page.getByLabel('Source Address')).toBeVisible();
     await expect(page.getByLabel('Destination Address')).toBeVisible();
@@ -105,7 +105,7 @@ test.describe('Distance Calculator E2E', () => {
 
   test('works on mobile viewport', async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 700 }); // iPhone X size
-    await page.goto('http://localhost:5173');
+    await page.goto('/');
     await page.getByLabel('Source Address').fill(SOURCE);
     await page.getByLabel('Destination Address').fill(DEST);
     await page.getByLabel('Both').check();

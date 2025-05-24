@@ -58,7 +58,7 @@ Call log:
    9 |
    10 | test.describe('Distance Calculator E2E', () => {
    11 |   test('calculates distance between two addresses', async ({ page }) => {
-   12 |     await page.goto('http://localhost:5173');
+   12 |     await page.goto('/');
    13 |
    14 |     // Fill in source and destination
    15 |     await page.getByLabel('Source Address').fill(SOURCE);
@@ -77,13 +77,13 @@ Call log:
    28 |   });
    29 |
    30 |   test('shows error for empty fields', async ({ page }) => {
-   31 |     await page.goto('http://localhost:5173');
+   31 |     await page.goto('/');
    32 |     const button = await page.getByRole('button', { name: /calculate distance/i });
    33 |     await expect(button).toBeDisabled();
    34 |   });
    35 |
    36 |   test('shows error for invalid source address', async ({ page }) => {
-   37 |     await page.goto('http://localhost:5173');
+   37 |     await page.goto('/');
    38 |     await page.getByLabel('Source Address').fill('123');
    39 |     await page.getByLabel('Destination Address').fill(DEST);
    40 |     const button = await page.getByRole('button', { name: /calculate distance/i });
@@ -92,7 +92,7 @@ Call log:
    43 |   });
    44 |
    45 |   test('shows error for identical addresses', async ({ page }) => {
-   46 |     await page.goto('http://localhost:5173');
+   46 |     await page.goto('/');
    47 |     await page.getByLabel('Source Address').fill(SOURCE);
    48 |     await page.getByLabel('Destination Address').fill(SOURCE);
    49 |     const button = await page.getByRole('button', { name: /calculate distance/i });
@@ -101,7 +101,7 @@ Call log:
    52 |   });
    53 |
    54 |   test('history page shows previous queries', async ({ page }) => {
-   55 |     await page.goto('http://localhost:5173');
+   55 |     await page.goto('/');
    56 |     // Add a query to history
    57 |     await page.getByLabel('Source Address').fill(SOURCE);
    58 |     await page.getByLabel('Destination Address').fill(DEST);
@@ -118,7 +118,7 @@ Call log:
    69 |
    70 |   test('shows error for unfindable address (geocoding failure)', async ({ page }) => {
    71 |     // NOTE: If this test fails, manually verify the error message in the UI and adjust the test or frontend as needed.
-   72 |     await page.goto('http://localhost:5173');
+   72 |     await page.goto('/');
    73 |     await page.getByLabel('Source Address').fill('ThisAddressDoesNotExist1234567890');
    74 |     await page.getByLabel('Destination Address').fill(DEST);
    75 |     await page.getByLabel('Both').check();
@@ -130,7 +130,7 @@ Call log:
    81 |   test('shows error for network error during geocoding', async ({ page }) => {
    82 |     // NOTE: If this test fails, manually verify the error message in the UI and adjust the test or frontend as needed.
    83 |     await page.route('**/nominatim.openstreetmap.org/**', route => route.abort());
-   84 |     await page.goto('http://localhost:5173');
+   84 |     await page.goto('/');
    85 |     await page.getByLabel('Source Address').fill(SOURCE);
    86 |     await page.getByLabel('Destination Address').fill(DEST);
    87 |     await page.getByLabel('Both').check();
@@ -141,7 +141,7 @@ Call log:
    91 |   });
    92 |
    93 |   test('has accessible labels and roles', async ({ page }) => {
-   94 |     await page.goto('http://localhost:5173');
+   94 |     await page.goto('/');
    95 |     // Check for accessible labels
    96 |     await expect(page.getByLabel('Source Address')).toBeVisible();
    97 |     await expect(page.getByLabel('Destination Address')).toBeVisible();
@@ -155,7 +155,7 @@ Call log:
   105 |
   106 |   test('works on mobile viewport', async ({ page }) => {
   107 |     await page.setViewportSize({ width: 375, height: 700 }); // iPhone X size
-  108 |     await page.goto('http://localhost:5173');
+  108 |     await page.goto('/');
   109 |     await page.getByLabel('Source Address').fill(SOURCE);
   110 |     await page.getByLabel('Destination Address').fill(DEST);
   111 |     await page.getByLabel('Both').check();

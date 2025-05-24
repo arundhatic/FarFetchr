@@ -32,7 +32,7 @@ app.state.limiter = limiter
 # Add CORS middleware for frontend integration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=["*"],  # Allow all origins for dev
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -98,4 +98,11 @@ async def get_history(
         return QueryHistoryList(history=[QueryRead.model_validate(q, from_attributes=True) for q in queries])
     except SQLAlchemyError as e:
         logger.error(f"Database error on /history: {e}")
-        raise HTTPException(status_code=500, detail="Database error") 
+        raise HTTPException(status_code=500, detail="Database error")
+
+@app.get("/")
+def read_root():
+    return {
+        "message": "FarFetchr backend is running!",
+        "docs": "Visit /docs for the interactive API documentation (Swagger UI)."
+    } 
