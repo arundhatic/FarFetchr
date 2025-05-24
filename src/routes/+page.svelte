@@ -273,7 +273,7 @@
 
 <div class="container">
   <div class="top-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-    <div style="display: flex; flex-direction: row; align-items: center; gap: 1.5rem;">
+    <div style="display: flex; flex-direction: column;">
       <h1 style="font-size: 2rem; font-weight: 500; margin-bottom: 0;">Distance Calculator</h1>
       <p style="margin: 0.25rem 0 0 0; color: #555;">Prototype web application for calculating the distance between addresses.</p>
     </div>
