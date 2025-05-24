@@ -15,9 +15,9 @@ logging.basicConfig(level=logging.INFO)
 def clean_address(address: str) -> str:
     # Remove 'Suite' and anything after, extra commas, and trim whitespace
     cleaned = re.sub(r'suite.*$', '', address, flags=re.IGNORECASE)
-    cleaned = re.sub(r',+', ',', cleaned)
-    cleaned = re.sub(r'\s+,', ',', cleaned)
-    cleaned = re.sub(r',+\s*$', '', cleaned)
+    cleaned = re.sub(r'(,\s*)+', ', ', cleaned)  # collapse any sequence of commas and spaces
+    cleaned = re.sub(r'\s+', ' ', cleaned)       # collapse multiple spaces
+    cleaned = re.sub(r',\s*$', '', cleaned)      # remove trailing comma
     return cleaned.strip()
 
 ACCEPTED_TYPES = {

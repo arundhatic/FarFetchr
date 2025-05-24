@@ -51,4 +51,25 @@ backend/
 DATABASE_URL=postgresql+asyncpg://<username>:<password>@localhost:5432/farfetchr
 ```
 
+## Running Backend Tests
+
+1. Create and activate a Python virtual environment (if not already):
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate
+   ```
+2. Install all dependencies (including test dependencies):
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. Run all backend tests (unit and API/integration) from the backend directory:
+   ```bash
+   pytest tests
+   ```
+
+All test dependencies are included in `requirements.txt`.
+
+**Troubleshooting:**
+- If you see import errors (e.g., `ModuleNotFoundError`), make sure you are running the tests from the `backend` directory and that your virtual environment is activated.
+
 ---

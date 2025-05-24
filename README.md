@@ -76,7 +76,7 @@ FarFetchr is a responsive SvelteKit web application that allows users to calcula
 - TypeScript, HTML, CSS
 
 ## Testing
-- **Test Framework:** [Vitest](https://vitest.dev/) is used for unit and component tests. Svelte Testing Library is available for component tests.
+- **Test Framework:** [Vitest](https://vitest.dev/) is used for unit and component tests. Svelte Testing Library is available for component tests. [Playwright](https://playwright.dev/) is used for end-to-end browser testing.
 - **Test Structure:**
   - Unit tests are located in `tests/unit/` (e.g., `tests/unit/utils.test.ts`).
   - E2E tests are located in `tests/e2e/` (e.g., `tests/e2e/distance-calculator.spec.ts`).
@@ -90,19 +90,32 @@ FarFetchr is a responsive SvelteKit web application that allows users to calcula
     npx vitest run tests/unit
     ```
   - Run all E2E tests (requires dev server running at http://localhost:5173):
-    ```bash
-    npm run dev
-    # In a separate terminal:
-    npx playwright test
-    ```
-  - Run E2E tests in headed mode (see browser):
-    ```bash
-    npx playwright test --headed
-    ```
-  - Generate and view E2E test report:
-    ```bash
-    npx playwright show-report
-    ```
+    1. Start the backend:
+       ```bash
+       cd backend
+       uvicorn main:app --reload
+       ```
+    2. Start the frontend:
+       ```bash
+       npm run dev
+       ```
+    3. In a separate terminal, install Playwright and its browsers (if you haven't already):
+       ```bash
+       npm install
+       npx playwright install
+       ```
+    4. Run E2E tests:
+       ```bash
+       npx playwright test tests/e2e
+       ```
+    - Run E2E tests in headed mode (see browser):
+      ```bash
+      npx playwright test --headed
+      ```
+    - Generate and view E2E test report:
+      ```bash
+      npx playwright show-report
+      ```
 - **What is Tested:**
   - Utility functions (distance calculation, address validation, cleaning)
   - E2E tests cover:
@@ -114,20 +127,7 @@ FarFetchr is a responsive SvelteKit web application that allows users to calcula
     - Accessibility (labels, roles)
     - Mobile viewport/responsive layout
 
-## E2E Testing
-- **Framework:** [Playwright](https://playwright.dev/) is used for end-to-end browser testing.
-- **Test Location:** E2E tests are in `tests/e2e/`.
-- **How to Run:**
-  1. Start the dev server: `npm run dev`
-  2. In a separate terminal, run: `npx playwright test`
-- **What is Covered:**
-  - Main distance calculation flow
-  - Error cases (empty, invalid, identical addresses)
-  - History page displays previous queries
-  - Geocoding failure (unfindable address)
-  - Network error during geocoding
-  - Accessibility (labels, roles)
-  - Mobile viewport/responsive layout
+> **Tip:** Make sure the app is running at the URLs expected by the tests (e.g., `http://localhost:5173`).
 
 ## Notes
 
