@@ -139,7 +139,25 @@ If you want to run backend and frontend locally (not recommended for most users)
 ## Technologies Used
 - [SvelteKit](https://kit.svelte.dev/)
 - [OpenStreetMap Nominatim API](https://nominatim.openstreetmap.org/)
+- [Python](https://www.python.org/)
+- [FastAPI](https://fastapi.tiangolo.com/)
+- [SQLAlchemy](https://www.sqlalchemy.org/) (async ORM)
+- [Pydantic](https://docs.pydantic.dev/) (data validation)
+- [asyncpg](https://github.com/MagicStack/asyncpg) (async Postgres driver)
+- [PostgreSQL](https://www.postgresql.org/)
+- [Uvicorn](https://www.uvicorn.org/) (ASGI server)
+- [Starlette](https://www.starlette.io/) (ASGI toolkit)
+- [python-dotenv](https://github.com/theskumar/python-dotenv) (env var management)
+- [SlowAPI](https://pypi.org/project/slowapi/) (rate limiting)
+- [Docker](https://www.docker.com/)
 - TypeScript, HTML, CSS
+
+## Testing Stack
+
+- [Vitest](https://vitest.dev/) — Frontend unit testing for SvelteKit and TypeScript code
+- [Playwright](https://playwright.dev/) — Frontend end-to-end (E2E) browser testing
+- [pytest](https://docs.pytest.org/) — Backend unit and integration testing for Python
+- [pytest-asyncio](https://pytest-asyncio.readthedocs.io/) — Async test support for FastAPI and async DB code
 
 ## Testing
 
@@ -264,78 +282,3 @@ cd ..
 npm install
 npm run dev
 ```
-
-### 2. Full Stack with Docker Compose
-- Runs Postgres, backend, and frontend as containers
-- Backend connects to DB at `db:5432`
-
-```bash
-docker-compose up --build
-```
-- Frontend: http://localhost:4173
-- Backend: http://localhost:8000
-- DB: localhost:5432 (exposed for dev)
-
----
-
-## Running the Frontend in Docker
-
-To build and run the frontend as a Docker container:
-
-```bash
-docker build -t farfetchr-frontend .
-docker run -p 4173:4173 farfetchr-frontend
-```
-
-The app will be available at http://localhost:4173
-
----
-
-## Troubleshooting
-
-### 1. Database Connection Issues
-- **Error:** `connection refused` or `database does not exist`
-  - Make sure Docker is running and the database container is healthy.
-  - Ensure no other service (like local Postgres) is using port 5432, or stop it before running Docker Compose.
-  - Use `docker-compose ps` to check container status.
-
-### 2. Data Not Reset After Restart
-- **Symptom:** Old data appears after `docker-compose down` and `up`
-  - Use `docker-compose down -v` to remove the persistent database volume and start fresh.
-
-### 3. DBeaver Shows Old Data
-- Make sure you are connecting to the Dockerized Postgres, not your local Postgres.
-- Stop your local Postgres service before connecting to `localhost:5432` in DBeaver.
-
-### 4. Port Conflicts
-- If you get errors about port 5432 or 8000/4173 being in use, stop any other services using those ports or change the port mapping in `docker-compose.yml`.
-
-### 5. Backend or Frontend Not Starting
-- Check logs with `docker-compose logs backend` or `docker-compose logs frontend` for error messages.
-- Make sure all dependencies are installed and Docker images are rebuilt after changes.
-
-### 6. Database Tables Missing
-- The backend automatically creates tables on startup. If tables are missing, check backend logs for errors.
-
-### 7. Playwright/E2E Test Failures
-- Ensure the frontend and backend are running at the expected URLs.
-- If using Docker Compose, update test URLs to match (`http://localhost:4173` for frontend).
-
-Enjoy using FarFetchr!
-
-## Future Features
-
-* **Authentication:**
-  - Allow users to create accounts and log in securely.
-  - Each user will have a private, persistent history of their distance queries, accessible from any device.
-
-* **Export History:**
-  - Users will be able to export their query history as CSV or PDF files.
-
-* **Map Visualization:**
-  - Display calculated routes or points directly on an interactive map (using Leaflet, Mapbox, or similar).
-
-* **Caching:**
-  - Implement caching for frequent or repeated queries to improve performance and reduce API usage.
-  - Results for common address pairs will be served instantly.
-  - Reduces load on external geocoding and routing services, and speeds up the user experience.
