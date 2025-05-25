@@ -1,5 +1,19 @@
 # FarFetchr: Distance Calculator Web App
 
+---
+
+## Project Highlights
+
+- **Robust local development with Docker Compose.**
+- **Secure, environment-variable-based configuration.**
+- **Automated database initialization.**
+- **Production-ready cloud deployment (Vercel + Render).**
+- **Live, public URLs:**
+  - Frontend: [https://far-fetchr.vercel.app/](https://far-fetchr.vercel.app/)
+  - Backend API docs: [https://farfetchr-backend.onrender.com/docs](https://farfetchr-backend.onrender.com/docs)
+
+---
+
 ## Quick Start: Fullstack with Docker Compose
 
 1. **Build and start everything:**
@@ -17,7 +31,7 @@
    ```
    This will remove all data and reinitialize the DB.
 
-3. **Connect to the database with DBeaver:**
+3. **Connect to the database with DBeaver or any other database client:**
    - Host: `localhost`
    - Port: `5432`
    - Database: `farfetchr`
@@ -276,3 +290,20 @@ The app will be available at http://localhost:4173
 - If using Docker Compose, update test URLs to match (`http://localhost:4173` for frontend).
 
 Enjoy using FarFetchr!
+
+## Future Features
+
+* **Authentication:**
+  - Allow users to create accounts and log in securely.
+  - Each user will have a private, persistent history of their distance queries, accessible from any device.
+
+* **Export History:**
+  - Users will be able to export their query history as CSV or PDF files.
+
+* **Map Visualization:**
+  - Display calculated routes or points directly on an interactive map (using Leaflet, Mapbox, or similar).
+
+* **Caching:**
+  - Implement caching for frequent or repeated queries to improve performance and reduce API usage.
+  - Results for common address pairs will be served instantly.
+  - Reduces load on external geocoding and routing services, and speeds up the user experience.
