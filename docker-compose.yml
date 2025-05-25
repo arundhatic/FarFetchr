@@ -2,10 +2,8 @@ version: '3.8'
 services:
   db:
     image: postgres:15
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+    env_file:
+      - .env
     ports:
       - "5432:5432"
     volumes:
@@ -13,9 +11,9 @@ services:
 
   backend:
     build: ./backend
-    env_file: ./backend/.env
-    environment:
-      DATABASE_URL: postgresql+asyncpg://postgres:grid2home@db:5432/farfetchr
+    env_file:
+      - .env
+      - backend/.env.docker
     ports:
       - "8000:8000"
     depends_on:

@@ -54,10 +54,13 @@
    ```bash
    cp .env.example .env
    cp backend/.env.example backend/.env
-   cp backend/.env.docker.example backend/.env.docker
+   cp backend/.env.example backend/.env.docker
    ```
    Edit `.env`, `backend/.env`, and `backend/.env.docker` to set your own secrets and configuration.
    **Do NOT commit your real `.env` files to git.** Only commit the `.env.example` files as templates.
+
+   > **Important:**
+   > The `POSTGRES_USER`, `POSTGRES_PASSWORD`, and `POSTGRES_DB` in your `.env` file are now used by both the database and backend automatically via Docker Compose. You can use any values you like—just set them in `.env` and do not hardcode them elsewhere. The backend and database will always be in sync.
 
 2. **Build and start everything:**
    ```bash
@@ -77,10 +80,10 @@
 4. **Connect to the database with DBeaver or any other database client:**
    - Host: `localhost`
    - Port: `5432`
-   - Database: `farfetchr`
-   - User: `postgres`
-   - Password: `<your_postgres_password>`
-   > The default password is set in your `docker-compose.yml` as `POSTGRES_PASSWORD`. Change it as needed for your environment.
+   - Database: (use the value of `POSTGRES_DB` from your `.env`)
+   - User: (use the value of `POSTGRES_USER` from your `.env`)
+   - Password: (use the value of `POSTGRES_PASSWORD` from your `.env`)
+   > These values are set in your `.env` file. Change them as needed for your environment.
    > Ensure your local Postgres is stopped to avoid port conflicts.
 
 5. **No manual DB initialization needed!**
