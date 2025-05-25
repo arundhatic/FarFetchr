@@ -8,6 +8,8 @@ RUN npm install
 
 COPY . .
 
+# Set environment variable for Docker build
+ENV BUILD_ENV=docker
 RUN npm run build
 
 # Stage 2: Serve the built app with a lightweight web server
