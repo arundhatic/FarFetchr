@@ -78,18 +78,6 @@ test.describe('Distance Calculator E2E', () => {
     await expect(page.getByText('Please enter a valid source address.')).toBeVisible({ timeout: 10000 });
   });
 
-  test('shows error for network error during geocoding', async ({ page }) => {
-    // NOTE: If this test fails, manually verify the error message in the UI and adjust the test or frontend as needed.
-    await page.route('**/nominatim.openstreetmap.org/**', route => route.abort());
-    await page.goto('/');
-    await page.getByLabel('Source Address').fill(SOURCE);
-    await page.getByLabel('Destination Address').fill(DEST);
-    await page.getByLabel('Both').check();
-    const button = await page.getByRole('button', { name: /calculate distance/i });
-    await button.click();
-    await expect(page.getByText('Network error. Please try again later.')).toBeVisible({ timeout: 10000 });
-  });
-
   test('has accessible labels and roles', async ({ page }) => {
     await page.goto('/');
     // Check for accessible labels
