@@ -12,6 +12,38 @@
   - Frontend: [https://far-fetchr.vercel.app/](https://far-fetchr.vercel.app/)
   - Backend API docs: [https://farfetchr-backend.onrender.com/docs](https://farfetchr-backend.onrender.com/docs)
 
+## Screenshots
+
+### Main App Screens
+
+![Main App - Welcome Screen](screenshots/1stScreen.png)
+*Main landing page of FarFetchr*
+
+![Distance Calculation - Miles](screenshots/calculateMiles.png)
+*Calculating distance in miles*
+
+![Distance Calculation - Kilometers](screenshots/calculateKms.png)
+*Calculating distance in kilometers*
+
+![Distance Calculation - Both Units](screenshots/CalculateBoth.png)
+*Calculating distance in both miles and kilometers*
+
+### Error Handling
+
+![Error - Invalid Source Address](screenshots/ErrorSource.png)
+*Error message for invalid or missing source address*
+
+![Error - Invalid Destination Address](screenshots/ErrorDestination.png)
+*Error message for invalid or missing destination address*
+
+### History & Filtering
+
+![History Table with Filter](screenshots/HistoryFilter.png)
+*Viewing and filtering query history*
+
+![History Table with Pagination](screenshots/HistoryPagination.png)
+*Paginated history of previous queries*
+
 ---
 
 ## Quick Start: Fullstack with Docker Compose
