@@ -48,7 +48,18 @@
 
 ## Quick Start: Fullstack with Docker Compose
 
-1. **Build and start everything:**
+1. **Environment Setup (Required First!)**
+
+   Copy the example environment files and fill in your own values:
+   ```bash
+   cp .env.example .env
+   cp backend/.env.example backend/.env
+   cp backend/.env.docker.example backend/.env.docker
+   ```
+   Edit `.env`, `backend/.env`, and `backend/.env.docker` to set your own secrets and configuration.
+   **Do NOT commit your real `.env` files to git.** Only commit the `.env.example` files as templates.
+
+2. **Build and start everything:**
    ```bash
    docker-compose up --build
    ```
@@ -56,14 +67,14 @@
    - Backend: http://localhost:8000
    - Database: persists in Docker volume `pgdata`
 
-2. **Reset the database (start fresh):**
+3. **Reset the database (start fresh):**
    ```bash
    docker-compose down -v
    docker-compose up --build
    ```
    This will remove all data and reinitialize the DB.
 
-3. **Connect to the database with DBeaver or any other database client:**
+4. **Connect to the database with DBeaver or any other database client:**
    - Host: `localhost`
    - Port: `5432`
    - Database: `farfetchr`
@@ -72,10 +83,10 @@
    > The default password is set in your `docker-compose.yml` as `POSTGRES_PASSWORD`. Change it as needed for your environment.
    > Ensure your local Postgres is stopped to avoid port conflicts.
 
-4. **No manual DB initialization needed!**
+5. **No manual DB initialization needed!**
    - The backend automatically creates tables on startup.
 
-5. **Troubleshooting:**
+6. **Troubleshooting:**
    - If you see old data after restart, use `docker-compose down -v` to clear the DB.
    - If you get connection errors, ensure no other service is using port 5432.
 
@@ -85,6 +96,7 @@
    ```bash
    cp .env.example .env
    cp backend/.env.example backend/.env
+   cp backend/.env.docker.example backend/.env.docker
    ```
 2. Edit `.env` and `backend/.env` to set your own secrets and configuration.
 3. **Do NOT commit your real `.env` files to git.** Only commit the `.env.example` files as templates.
