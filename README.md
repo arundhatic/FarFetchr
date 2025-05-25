@@ -314,6 +314,7 @@ npm run dev
 - **Automated Testing:** All unit and E2E tests will run on every push and pull request.
 - **Continuous Deployment:** Automatic deployment to Vercel (frontend) and Render (backend) after successful tests.
 - **Code Quality:** Linting and formatting checks to maintain code standards.
+- **Vulnerability Checks:** Automated security scans using Snyk or Trivy to detect vulnerabilities in both code and dependencies (including Docker images).
 - **Status Badges:** CI status will be displayed in the README.
 
 > _CI/CD setup (e.g., with GitHub Actions) is planned for future releases._
