@@ -176,19 +176,30 @@ If you want to run backend and frontend locally (not recommended for most users)
 
 ## Testing
 
-- **Unit tests:**
+- **Run all tests (frontend & backend):**
+  ```bash
+  npm test
+  ```
+  This command runs both frontend unit tests (Vitest), frontend E2E tests (Playwright), and backend tests (pytest, pytest-asyncio) in sequence.
+
+- **Frontend unit tests only:**
   ```bash
   npm run test:unit
   ```
 
-- **End-to-End (E2E) tests (Docker Compose):**
+- **Frontend E2E tests (Docker Compose):**
   Make sure the full stack is running with Docker Compose (`docker-compose up --build`), then run:
   ```bash
   npm run test:e2e:docker
   ```
   This will run Playwright E2E tests against the frontend at `http://localhost:4173`.
 
-> The previous `npm run test:e2e` script for local dev has been removed to avoid environment conflicts.
+- **Backend tests only:**
+  From the `backend/` directory, run:
+  ```bash
+  ./run_tests.sh
+  ```
+  This will run all backend unit and async tests using pytest and pytest-asyncio.
 
 ## Notes
 
